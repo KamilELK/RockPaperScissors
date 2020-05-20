@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -55,7 +57,11 @@ namespace RockPaperScissorsLizSpock.Services
             //    btnGenerateStats.Enabled = true;
             //    btnGenerateStats.Visible = true;
             //}
-
+            JsonSerializer serializer = new JsonSerializer();
+            var res = currentRound.ResultToJson();
+            StreamWriter sw = new StreamWriter(@"c:\json.txt");
+            JsonWriter writer = new JsonTextWriter(sw);
+            serializer.Serialize(writer,res);
             return currentRound.ToString();
         }
 

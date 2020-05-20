@@ -76,6 +76,17 @@ namespace RockPaperScissorsLizSpock.Services
             return data;
         }
 
+        public object ResultToJson()
+        {
+            Result res = new Result();
+
+            res.Cpu_move = _userMove.ToString();
+            res.User_move = _cpuMove.ToString();
+            res.result = _cpuMove.ToString();
+            res.global_score = new string[] { "", "" };
+            return res;
+        }
+
         public moves UsersMove
         {
             get
