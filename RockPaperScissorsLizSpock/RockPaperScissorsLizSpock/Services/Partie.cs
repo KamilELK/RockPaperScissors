@@ -7,7 +7,8 @@ namespace RockPaperScissorsLizSpock.Services
 {
     public class Partie
     {
-        public enum moves { Rock, Paper, Scissors, Lizard, Spock };
+        //{ Rock, Paper, Scissors, Lizard, Spock };
+        public enum moves { Rock , Paper , Scissors , Lizard , Spock  };
         public enum result { Draw, Win, Loss };
 
         private moves _userMove;
@@ -65,6 +66,14 @@ namespace RockPaperScissorsLizSpock.Services
                     this._result = result.Draw;
                     break;
             }
+        }
+
+        public override string ToString()
+        {
+            string data = "User move:\t" + _userMove.ToString() + Environment.NewLine;
+            data += "Cpu move:\t" + _cpuMove.ToString() + Environment.NewLine;
+            data += "Result:\t\t" + getResult() + Environment.NewLine;
+            return data;
         }
 
         public moves UsersMove

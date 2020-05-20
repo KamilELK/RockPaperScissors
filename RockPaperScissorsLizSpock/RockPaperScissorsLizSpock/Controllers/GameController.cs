@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using RockPaperScissorsLizSpock.Services;
 
 namespace RockPaperScissorsLizSpock.Controllers
 {
@@ -21,9 +23,26 @@ namespace RockPaperScissorsLizSpock.Controllers
 
         // GET: api/Game/5
         [HttpGet("{id}", Name = "Get")]
-        public IEnumerable<string> Get(int id)
+        public JObject Get(string id)
         {
-                return new string[] { "valeur " + id , "valeur " + id };
+            Game game = new Game();
+            switch (id)
+            {
+                case "0":
+                    return game.Play("Rock");
+                case "1":
+                    return game.Play("Paper");
+                case "2":
+                    return game.Play("Scissors");
+                case "3":
+                    return game.Play("Lizard");
+                case "4":
+                    return game.Play("Spock");
+                case "init":
+                    return JObject.Parse("init");
+                default:
+                    return JObject.Parse("Une erreur s'est produite");
+            }
         }
 
         // POST: api/Game
