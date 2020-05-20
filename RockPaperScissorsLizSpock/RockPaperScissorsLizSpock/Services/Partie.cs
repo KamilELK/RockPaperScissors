@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RockPaperScissors.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,22 +69,36 @@ namespace RockPaperScissorsLizSpock.Services
             }
         }
 
-        public override string ToString()
-        {
-            string data = "User move:\t" + _userMove.ToString() + Environment.NewLine;
-            data += "Cpu move:\t" + _cpuMove.ToString() + Environment.NewLine;
-            data += "Result:\t\t" + getResult() + Environment.NewLine;
-            return data;
-        }
-
-        public object ResultToJson()
+        public object ResultToJson(Statistiques stats)
         {
             Result res = new Result();
+            
+
+            string data = "";
+
+            data += "Game Stats" + Environment.NewLine;
+            data += "\tWins: " + stats.wins + Environment.NewLine;
+            data += "\tLosses:" + stats.losses + Environment.NewLine;
+            data += "\tDraws: " + stats.draws + Environment.NewLine + Environment.NewLine;
+
+            data += "User move stats" + Environment.NewLine;
+            data += "\tRock usage (%): " + ((float)stats.RockUser / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tPaper usage (%):" + ((float)stats.PaperUser / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tScissors usage (%): " + ((float)stats.ScissorsUser / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tLizard usage (%): " + ((float)stats.LizardUser / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tSpock usage (%): " + ((float)stats.SpockUser / (float)stats.games) * 100 + Environment.NewLine + Environment.NewLine;
+
+            data += "CPU move stats" + Environment.NewLine;
+            data += "\tRock usage (%): " + ((float)stats.RockCPU / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tPaper usage (%):" + ((float)stats.PaperCPU / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tScissors usage (%): " + ((float)stats.ScissorsCPU / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tLizard usage (%): " + ((float)stats.LizardCPU / (float)stats.games) * 100 + Environment.NewLine;
+            data += "\tSpock usage (%): " + ((float)stats.SpockCPU / (float)stats.games) * 100;
 
             res.Cpu_move = _userMove.ToString();
             res.User_move = _cpuMove.ToString();
-            res.result = _cpuMove.ToString();
-            res.global_score = new string[] { "", "" };
+            res.result = getResult().ToString();
+            res.global_score = new string[] { data };
             return res;
         }
 

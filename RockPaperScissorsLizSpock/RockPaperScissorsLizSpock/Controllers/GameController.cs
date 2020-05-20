@@ -23,7 +23,7 @@ namespace RockPaperScissorsLizSpock.Controllers
 
         // GET: api/Game/5
         [HttpGet("{id}", Name = "Get")]
-        public JObject Get(string id)
+        public string Get(string id)
         {
             Game game = new Game();
             switch (id)
@@ -39,9 +39,10 @@ namespace RockPaperScissorsLizSpock.Controllers
                 case "4":
                     return game.Play("Spock");
                 case "init":
-                    return JObject.Parse("init");
+                    game = new Game();
+                    return "init";
                 default:
-                    return JObject.Parse("Une erreur s'est produite");
+                    return "Une erreur s'est produite";
             }
         }
 

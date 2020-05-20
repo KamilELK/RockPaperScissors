@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Nancy.Json;
+using Newtonsoft.Json;
+using RockPaperScissors.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,61 +15,37 @@ namespace RockPaperScissorsLizSpock.Services
         private Partie.moves cpuMove;
         private Partie currentRound;
         public List<Partie> gameData;
+        private Statistiques stats;
+
 
 
         public Game()
         {
-            //InitializeComponent();
+            stats = new Statistiques();
 
-            //drpAvailableMoves.Items.Clear();
-
-            //foreach (string moveName in Enum.GetNames(typeof(Partie.moves)))
-            //{
-            //    drpAvailableMoves.Items.Add(moveName);
-            //}
-            //drpAvailableMoves.SelectedIndex = 0;
-
-            // Ensure that we have a new list to store all game data in
             gameData = new List<Partie>();
         }
 
         public string Play(string i)
         {
-            // Parse the user input to a Round.moves enum value
             userMove = parseUserChoice(i);
 
-            // Generate the data for this round
             cpuMove = cpuPlay();
             currentRound = new Partie(userMove, cpuMove);
 
-            // Add the data from this round to the list of previous
-            // rounds
             gameData.Add(currentRound);
 
-            //// Write the result of this round to the log
-            //rtbResults.AppendText("Game number: " + gameData.Count + Environment.NewLine);
-            //rtbResults.AppendText("______________" + Environment.NewLine);
-            //rtbResults.AppendText(currentRound.ToString() + Environment.NewLine);
+            stats.generateStats(gameData);
 
-            //// Ensure we scroll to the end of the line
-            //rtbResults.ScrollToCaret();
-
-            //if (gameData.Count >= 10)
-            //{
-            //    btnGenerateStats.Enabled = true;
-            //    btnGenerateStats.Visible = true;
-            //}
             JsonSerializer serializer = new JsonSerializer();
-            var res = currentRound.ResultToJson();
-            StreamWriter sw = new StreamWriter(@"c:\json.txt");
-            JsonWriter writer = new JsonTextWriter(sw);
-            serializer.Serialize(writer,res);
-            return currentRound.ToString();
+            var res = currentRound.ResultToJson(stats);
+            var json = new JavaScriptSerializer().Serialize(res);
+
+            return json;
         }
 
         private Partie.moves cpuPlay()
         {
-            // Extremely bad algorithm for generating the CPU guess
             Random randChoice = new Random(System.DateTime.Now.Second);
             switch (randChoice.Next(1, 5))
             {
