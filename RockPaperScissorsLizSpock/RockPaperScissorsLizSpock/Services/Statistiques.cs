@@ -10,41 +10,26 @@ namespace RockPaperScissors.Services
    public class Statistiques
     {
 
-      private int _winsField;
-      private int _lossesField;
-      private int _drawsField;
-      private int _numberOfGames;
+      private static int _winsField;
+      private static int _lossesField;
+      private static int _drawsField;
+      private static int _numberOfGames;
 
-      private int _rockCPU;
-      private int _paperCPU;
-      private int _scissorsCPU;
-      private int _lizardCPU;
-      private int _spockCPU;
+      private static int _rockCPU;
+      private static int _paperCPU;
+      private static int _scissorsCPU;
+      private static int _lizardCPU;
+      private static int _spockCPU;
 
-      private int _rockUser;
-      private int _paperUser;
-      private int _scissorsUser;
-      private int _lizardUser;
-      private int _spockUser;
+      private static int _rockUser;
+      private static int _paperUser;
+      private static int _scissorsUser;
+      private static int _lizardUser;
+      private static int _spockUser;
 
       public Statistiques()
       {
-         this._winsField = 0;
-         this._lossesField = 0;
-         this._drawsField = 0;
-         this._numberOfGames = 0;
-
-         this._rockCPU = 0;
-         this._scissorsCPU = 0;
-         this._paperCPU = 0;
-         this._lizardCPU = 0;
-         this._spockCPU = 0;
-
-         this._rockUser = 0;
-         this._scissorsUser = 0;
-         this._paperUser = 0;
-         this._lizardUser = 0;
-         this._spockUser = 0;
+         
       }
 
       public void generateStats(List<Partie> inGameData)
@@ -105,16 +90,36 @@ namespace RockPaperScissors.Services
             }
          }
       }
+      
+      public void ClearStats()
+      {
+            _winsField = 0;
+            _lossesField = 0;
+            _drawsField = 0;
+            _numberOfGames = 0;
+
+            _rockCPU = 0;
+            _scissorsCPU = 0;
+            _paperCPU = 0;
+            _lizardCPU = 0;
+            _spockCPU = 0;
+
+            _rockUser = 0;
+            _scissorsUser = 0;
+            _paperUser = 0;
+            _lizardUser = 0;
+            _spockUser = 0;
+      }
 
       public int wins
       {
          get
          {
-            return this._winsField;
+            return _winsField;
          }
          set
          {
-            this._winsField = value;
+            _winsField = value;
          }
       }
 
@@ -122,11 +127,11 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._lossesField;
+            return _lossesField;
          }
          set
          {
-            this._lossesField = value;
+            _lossesField = value;
          }
       }
 
@@ -134,11 +139,11 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._drawsField;
+            return _drawsField;
          }
          set
          {
-            this._drawsField = value;
+            _drawsField = value;
          }
       }
 
@@ -146,11 +151,11 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._numberOfGames;
+            return _numberOfGames;
          }
          set
          {
-            this._numberOfGames = value;
+            _numberOfGames = value;
          }
       }
 
@@ -158,11 +163,11 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._rockCPU;
+            return _rockCPU;
          }
          set
          {
-            this._rockCPU = value;
+            _rockCPU = value;
          }
       }
 
@@ -170,11 +175,11 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._paperCPU;
+            return _paperCPU;
          }
          set
          {
-            this._paperCPU = value;
+            _paperCPU = value;
          }
       }
 
@@ -182,77 +187,77 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._scissorsCPU;
+            return _scissorsCPU;
          }
          set
          {
-            this._scissorsCPU = value;
+            _scissorsCPU = value;
          }
       }
       public int LizardCPU
       {
          get
          {
-            return this._lizardCPU;
+            return _lizardCPU;
          }
          set
          {
-            this._lizardCPU = value;
+            _lizardCPU = value;
          }
       }
       public int SpockCPU
       {
          get
          {
-            return this._spockCPU;
+            return _spockCPU;
          }
          set
          {
-            this._spockCPU = value;
+            _spockCPU = value;
          }
       }
       public int RockUser
       {
          get
          {
-            return this._rockUser;
+            return _rockUser;
          }
          set
          {
-            this._rockUser = value;
+            _rockUser = value;
          }
       }
       public int PaperUser
       {
          get
          {
-            return this._paperUser;
+            return _paperUser;
          }
          set
          {
-            this._paperUser = value;
+            _paperUser = value;
          }
       }
       public int ScissorsUser
       {
          get
          {
-            return this._scissorsUser;
+            return _scissorsUser;
          }
          set
          {
-            this._scissorsUser = value;
+            _scissorsUser = value;
          }
       }
       public int LizardUser
       {
          get
          {
-            return this._lizardUser;
+            return _lizardUser;
          }
          set
          {
-            this._lizardUser = value;
+            _lizardUser = value;
          }
       }
 
@@ -260,11 +265,11 @@ namespace RockPaperScissors.Services
       {
          get
          {
-            return this._spockUser;
+            return _spockUser;
          }
          set
          {
-            this._spockUser = value;
+            _spockUser = value;
          }
       }
 

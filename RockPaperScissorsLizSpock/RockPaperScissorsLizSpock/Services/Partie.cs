@@ -76,24 +76,9 @@ namespace RockPaperScissorsLizSpock.Services
 
             string data = "";
 
-            data += "Game Stats" + Environment.NewLine;
-            data += "\tWins: " + stats.wins + Environment.NewLine;
-            data += "\tLosses:" + stats.losses + Environment.NewLine;
-            data += "\tDraws: " + stats.draws + Environment.NewLine + Environment.NewLine;
-
-            data += "User move stats" + Environment.NewLine;
-            data += "\tRock usage (%): " + ((float)stats.RockUser / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tPaper usage (%):" + ((float)stats.PaperUser / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tScissors usage (%): " + ((float)stats.ScissorsUser / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tLizard usage (%): " + ((float)stats.LizardUser / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tSpock usage (%): " + ((float)stats.SpockUser / (float)stats.games) * 100 + Environment.NewLine + Environment.NewLine;
-
-            data += "CPU move stats" + Environment.NewLine;
-            data += "\tRock usage (%): " + ((float)stats.RockCPU / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tPaper usage (%):" + ((float)stats.PaperCPU / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tScissors usage (%): " + ((float)stats.ScissorsCPU / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tLizard usage (%): " + ((float)stats.LizardCPU / (float)stats.games) * 100 + Environment.NewLine;
-            data += "\tSpock usage (%): " + ((float)stats.SpockCPU / (float)stats.games) * 100;
+            data += "Wins: " + stats.wins;
+            data += "Losses:" + stats.losses;
+            data += "Draws: " + stats.draws;
 
             res.User_move = _userMove.ToString();
             res.Cpu_move = _cpuMove.ToString();

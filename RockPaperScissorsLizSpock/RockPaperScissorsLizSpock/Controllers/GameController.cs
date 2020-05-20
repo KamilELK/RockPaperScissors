@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using RockPaperScissors.Services;
 using RockPaperScissorsLizSpock.Services;
 
 namespace RockPaperScissorsLizSpock.Controllers
@@ -26,6 +27,8 @@ namespace RockPaperScissorsLizSpock.Controllers
         public string Get(string id)
         {
             Game game = new Game();
+            Statistiques stats = new Statistiques();
+
             switch (id)
             {
                 case "0":
@@ -40,6 +43,7 @@ namespace RockPaperScissorsLizSpock.Controllers
                     return game.Play("Spock");
                 case "init":
                     game = new Game();
+                    stats.ClearStats();
                     return "init";
                 default:
                     return "Une erreur s'est produite";
