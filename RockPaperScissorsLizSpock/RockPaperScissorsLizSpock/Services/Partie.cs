@@ -9,7 +9,7 @@ namespace RockPaperScissorsLizSpock.Services
     public class Partie
     {
         //{ Rock, Paper, Scissors, Lizard, Spock };
-        public enum moves { Rock , Paper , Scissors , Lizard , Spock  };
+        public enum moves { Rock = 1, Paper, Scissors, Lizard, Spock };
         public enum result { Draw, Win, Loss };
 
         private moves _userMove;
@@ -72,7 +72,7 @@ namespace RockPaperScissorsLizSpock.Services
         public object ResultToJson(Statistiques stats)
         {
             Result res = new Result();
-            
+
 
             string data = "";
 
@@ -95,8 +95,8 @@ namespace RockPaperScissorsLizSpock.Services
             data += "\tLizard usage (%): " + ((float)stats.LizardCPU / (float)stats.games) * 100 + Environment.NewLine;
             data += "\tSpock usage (%): " + ((float)stats.SpockCPU / (float)stats.games) * 100;
 
-            res.Cpu_move = _userMove.ToString();
-            res.User_move = _cpuMove.ToString();
+            res.User_move = _userMove.ToString();
+            res.Cpu_move = _cpuMove.ToString();
             res.result = getResult().ToString();
             res.global_score = new string[] { data };
             return res;
