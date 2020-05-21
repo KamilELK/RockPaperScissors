@@ -1,27 +1,26 @@
 module Main exposing (..)
 
-import Browser
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+import Browser exposing (sandbox)
+import Html exposing (..)
+import Html.Events exposing (..)
+import Html.Attributes exposing (..)
 
 main =
   Browser.sandbox { init = init, update = update, view = view }
 
 --types
 
-type alias Model =
+type alias Model = 
  { value : Int
  }  
 
-type Choice
+type Msg
     = Rock
     | Paper
     | Scissors
     | Spock
     | Lizard
-    | None
-init : (Model, Cmd Msg)
-init = (Model -1, Cmd.none)
+    | Reset 
 
 type Result
     = CpuWins
@@ -29,55 +28,62 @@ type Result
     | Draw    
 
 type alias Score = Int
-type Msg = OnChoiceChange
-         | Reset
+
+
+init : Model
+init = Model -1
+
+
+
 
 
 --Model
 
 
 --update
--- 904021904021904021904021
-choiceUpdate : Choice -> Model -> (Model, Cmd Msg)
+choiceUpdate : Msg -> Model -> Model
 choiceUpdate choice model = 
     case choice of
     Rock -> 
-        ( { model | value = 0 }, Cmd.none )
+        { model | value = 0 }
     Paper ->
-        ( { model | value = 1 }, Cmd.none )
+        { model | value = 1 }
     Scissors ->
-        ( { model | value = 2 }, Cmd.none )
+        { model | value = 2 }
     Lizard -> 
-        ( { model | value = 3 }, Cmd.none )
+        { model | value = 3 }
     Spock ->
-        ( { model | value = 4 }, Cmd.none )            
+        { model | value = 4 } 
+    Reset ->
+        resetGame model               
 
 
 
-resetGame : Msg -> Model -> (Model, Cmd Msg)
-resetGame msg model =
-     ( { model | value = -1 }, Cmd.none )
+resetGame :  Model -> Model
+resetGame  model =
+      { model | value = -1 }
 
     
 
 
-update : Msg -> Model -> Choice -> (Model, Cmd Msg) 
-update msg model choice =
-    case msg of
-        OnChoiceChange ->
+update : Msg -> Model -> Model 
+update choice model =
+    case choice of
+        Reset ->
+            resetGame  model 
+        _ ->
             choiceUpdate choice model
 
             
 
-        reset ->
-            resetGame msg model 
+        
             
             
 
 
 
 --view
-choiceToString : Choice -> String
+choiceToString : Msg -> String
 choiceToString choice =
     case choice of
         Rock ->
@@ -93,22 +99,29 @@ choiceToString choice =
 
         Spock ->
             "Spock"
-        None ->
-            ""   
+        Reset ->
+            "Reset game"   
 
 
 
 
 
-button : Choice -> Html Msg
-button choix =
-    button
-        [ class <| choiceToString choix ,onClick ( OnChoiceChange )]
-        [ text <| choiceToString choix ]
 
-view : Html Msg
-view =
+
+view : Model -> Html Msg
+view model =
   div []
-    [button Rock, button Paper, button Scissors, button Lizard, button Spock ]    
+    [   h1  [style "margin" "5vh 30vw"] [text "Rock Paper Scissors Lizar Spock"],
+        button [style "margin" "5vh 5vw", onClick Rock][ text "Rock"],
+        button [onClick Paper][ text "Paper"],
+        button [onClick Scissors][ text "Scissors"],
+        button [onClick Lizard][ text "Lizard"],
+        button [onClick Spock][ text "Spock"],
+        button [onClick Reset][ text "Restart"], 
+        p [] [text (String.fromInt model.value)]
+
+        
+    ]
+        
 
       
