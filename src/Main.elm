@@ -5,9 +5,14 @@ import Html exposing (Html, button, div, text)
 import Html.Events exposing (onClick)
 
 main =
-  Browser.sandbox { model = initModel, update = update, view = view }
+  Browser.sandbox { init = init, update = update, view = view }
 
 --types
+
+type alias Model =
+ { value : Int
+ }  
+
 type Choice
     = Rock
     | Paper
@@ -15,8 +20,8 @@ type Choice
     | Spock
     | Lizard
     | None
-initModel : Int
-initModel = -1
+init : (Model, Cmd Msg)
+init = (Model -1, Cmd.none)
 
 type Result
     = CpuWins
@@ -24,46 +29,48 @@ type Result
     | Draw    
 
 type alias Score = Int
-type Msg = OnChoiceChange | Reset
+type Msg = OnChoiceChange
+         | Reset
 
 
 --Model
-model : initModel
+
 
 --update
-
-choiceUpdate : Choice -> Int
-choiceUpdate choice = 
+-- 904021904021904021904021
+choiceUpdate : Choice -> Model -> (Model, Cmd Msg)
+choiceUpdate choice model = 
     case choice of
     Rock -> 
-        initModel 0
+        ( { model | value = 0 }, Cmd.none )
     Paper ->
-        initModel 1
+        ( { model | value = 1 }, Cmd.none )
     Scissors ->
-        initModel 2
+        ( { model | value = 2 }, Cmd.none )
     Lizard -> 
-        initModel 3
+        ( { model | value = 3 }, Cmd.none )
     Spock ->
-        initModel 4            
+        ( { model | value = 4 }, Cmd.none )            
 
 
 
-resetGame = 
-    initModel - 1
+resetGame : Msg -> Model -> (Model, Cmd Msg)
+resetGame msg model =
+     ( { model | value = -1 }, Cmd.none )
 
     
 
 
-update : Msg -> Choice -> (initModel) 
-update msg choice  =
+update : Msg -> Model -> Choice -> (Model, Cmd Msg) 
+update msg model choice =
     case msg of
         OnChoiceChange ->
-            choiceUpdate choice
+            choiceUpdate choice model
 
             
 
         reset ->
-            resetGame
+            resetGame msg model 
             
             
 
@@ -96,7 +103,7 @@ choiceToString choice =
 button : Choice -> Html Msg
 button choix =
     button
-        [ onClick (OnChoiceChange choix)]
+        [ class <| choiceToString choix ,onClick ( OnChoiceChange )]
         [ text <| choiceToString choix ]
 
 view : Html Msg
