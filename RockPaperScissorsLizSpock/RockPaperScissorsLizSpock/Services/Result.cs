@@ -10,6 +10,6 @@ namespace RockPaperScissorsLizSpock.Services
         public string Cpu_move;
         public string User_move;
         public string result;
-        public string[] global_score;
+        public string global_score;
     }
 }

@@ -77,13 +77,13 @@ namespace RockPaperScissorsLizSpock.Services
             string data = "";
 
             data += "Wins: " + stats.wins;
-            data += "Losses:" + stats.losses;
-            data += "Draws: " + stats.draws;
+            data += " Losses: " + stats.losses;
+            data += " Draws: " + stats.draws;
 
             res.User_move = _userMove.ToString();
             res.Cpu_move = _cpuMove.ToString();
             res.result = getResult().ToString();
-            res.global_score = new string[] { data };
+            res.global_score =  data ;
             return res;
         }
 
