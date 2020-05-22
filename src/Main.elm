@@ -1,32 +1,36 @@
 module Main exposing (..)
 
-import Browser exposing (sandbox)
-import Http 
+import Browser
+import Http
 import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as D exposing (Decoder, field, string)
 
+
+
+-- MAINY
+
+
+
 main =
-  Browser.sandbox { init = init, update = update, view = view }
+  Browser.element
+    { init = init
+    , update = update
+    , subscriptions = subscriptions
+    , view = view
+    }
 
---types
 
-type alias Model = 
- { value : Int,
-   resultatActuel : Resultat 
-    
- }  
 
-type Msg
-    = Rock
-    | Paper
-    | Scissors
-    | Spock
-    | Lizard
-    | Reset 
-    | GetResult(Result Http.Error Resultat)
+-- MODEL
 
+
+type Model
+  = None
+  | Failure
+  | Loading
+  | Success Resultat
 
 
 type alias Resultat = 
@@ -36,44 +40,59 @@ type alias Resultat =
      global_score : String   
     }
 
+init : () -> (Model, Cmd Msg)
+init _ =
+  ( None
+  , Cmd.none
+  )
+
+
+
+-- UPDATE
+
+
+type Msg
+  = GotResult (Result Http.Error Resultat)
+    | Rock
+    | Paper
+    | Scissors
+    | Spock
+    | Lizard
+    | Reset
+     
+ 
 
 
 
 
---Model
+updateChoice : Msg -> Model -> (Model, Cmd Msg)  
+updateChoice choice model = 
+    case choice of 
+    Rock ->
+      (Loading, getRps 0)
+    Paper ->
+      (Loading, getRps 1)
+    Scissors ->
+      (Loading, getRps 2)
+    Lizard ->
+      (Loading, getRps 3)
+    Spock ->   
+      (Loading, getRps 4)
+    Reset ->
+      (None, Cmd.none)  
+    GotResult some->
+      (Loading, Cmd.none)  
+    
 
-init : Model
-init = { value = -1 ,
- resultatActuel = {cpu_move = "", user_move = "", result = "", global_score = ""}
-  }
+getRps : Int -> Cmd Msg 
+getRps  nbr = 
+        Http.get 
+        {url = apiUrl  ++ String.fromInt nbr,
+        expect = Http.expectJson GotResult myDecoder
+        } 
 
 apiUrl : String
 apiUrl = "https://localhost:5001/getRps/" 
-
-
-
-
-
-
---update
-choiceUpdate : Msg -> Model -> Model
-choiceUpdate choice model = 
-    case choice of
-    Rock -> 
-        { model | value = 0 }
-        
-    Paper ->
-        { model | value = 1 }
-    Scissors ->
-        { model | value = 2 }
-    Lizard -> 
-        { model | value = 3 }
-    Spock ->
-        { model | value = 4 } 
-    Reset ->
-        resetGame model  
-    GetResult any ->
-        model
 
 
 myDecoder : Decoder Resultat
@@ -82,61 +101,36 @@ myDecoder =
      (D.field "cpu_move" D.string )  
      (D.field "user_move" D.string )  
      (D.field "result" D.string )  
-     (D.field "global_score " D.string )                     
+     (D.field "global_score " D.string )   
+
+update : Msg -> Model -> (Model, Cmd Msg)
+update msg model =
+  case msg of
+    GotResult result ->
+      case result of
+        Ok fullText ->
+          (Success fullText, Cmd.none)
+
+        Err _ ->
+          (Failure, Cmd.none)
+    _ -> updateChoice msg model
+
+
+-- SUBSCRIPTIONS
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
 
 
 
-getRps : Model -> Cmd Msg 
-getRps model = 
-        Http.get 
-        {url = apiUrl  ++ (String.fromInt model.value),
-        expect = Http.expectJson GetResult myDecoder
-        }
-   -- {url = apiUrl ++ (String.fromInt model.value),
-    --expect = Http.expectJson GetResult myDecoder   
-   -- }
-
-   
-
-resetGame :  Model -> Model
-resetGame  model =
-      { model | value = -1 }
-
-    
-
-
-update : Msg -> Model -> Model 
-update choice model =
-    case choice of
-        Reset ->
-            resetGame  model 
-        GetResult (Ok json) ->
-            { model | resultatActuel = json  }
-        GetResult (Err e ) ->
-            Debug.log("failed to load data") model           
-
-        _ ->
-            choiceUpdate choice model
-
-            
-
-        
-            
-            
-
-
-
---view
-
-
-
-
-
+-- VIEW
 
 view : Model -> Html Msg
 view model =
   div []
-    [   h1  [style "margin" "5vh 30vw"] [text "Rock Paper Scissors Lizar Spock"],
+    [   h1  [style "margin" "5vh 30vw"] [text "Rock Paper Scissors Lizard Spock"],
         div []
         [ button [style "margin" "5vh 45vw", onClick Reset][ text "Restart"]], 
         
@@ -154,8 +148,13 @@ view model =
             ],
         
 
-        p [style "margin" "5vh 13vw"] [text (String.fromInt model.value)]
-    ]
-        
-
-      
+        case model of 
+          Success fullText ->
+            pre [] [ text fullText.cpu_move ]
+          Loading ->
+            pre [] [ text "status : loading" ] 
+          Failure ->
+            pre [] [ text "status : failure" ]  
+          None ->
+            pre [] [ text "status : none" ]   
+    ]      
