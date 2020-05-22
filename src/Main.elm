@@ -25,7 +25,7 @@ type Msg
     | Spock
     | Lizard
     | Reset 
-    | GetResult(Result Http.Error (Resultat))
+    | GetResult(Result Http.Error Resultat)
 
 
 
@@ -60,7 +60,8 @@ choiceUpdate : Msg -> Model -> Model
 choiceUpdate choice model = 
     case choice of
     Rock -> 
-        { model | value = 0  }
+        { model | value = 0 }
+        
     Paper ->
         { model | value = 1 }
     Scissors ->
@@ -71,6 +72,8 @@ choiceUpdate choice model =
         { model | value = 4 } 
     Reset ->
         resetGame model  
+    GetResult any ->
+        model
 
 
 myDecoder : Decoder Resultat
@@ -83,15 +86,17 @@ myDecoder =
 
 
 
-getRps : Model -> Cmd Msg
+getRps : Model -> Cmd Msg 
 getRps model = 
-    {url = apiUrl ++ (String.fromInt model.value),
-     expect = Http.expectJson GetResult myDecoder 
-     
-    }
+        Http.get 
+        {url = apiUrl  ++ (String.fromInt model.value),
+        expect = Http.expectJson GetResult myDecoder
+        }
+   -- {url = apiUrl ++ (String.fromInt model.value),
+    --expect = Http.expectJson GetResult myDecoder   
+   -- }
 
    
-
 
 resetGame :  Model -> Model
 resetGame  model =
@@ -122,25 +127,6 @@ update choice model =
 
 
 --view
-choiceToString : Msg -> String
-choiceToString choice =
-    case choice of
-        Rock ->
-            "Rock"
-        Paper ->
-            "Paper"
-
-        Scissors ->
-            "Scissors"
-
-        Lizard ->
-            "Lizard" 
-
-        Spock ->
-            "Spock"
-        Reset ->
-            "Reset game"   
-
 
 
 
