@@ -150,7 +150,7 @@ view model =
 
         case model of 
           Success fullText ->
-            pre [] [ text fullText.cpu_move ]
+            pre [] [ text ("opponent's choice : " ++fullText.cpu_move ++ "\n your choice : " ++ fullText.user_move ++ "\n Result" ++ fullText.result ++ "\n Global Score : " ++fullText.global_score) ]
           Loading ->
             pre [] [ text "status : loading" ] 
           Failure ->
