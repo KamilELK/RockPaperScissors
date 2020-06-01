@@ -27,10 +27,10 @@ main =
 
 
 type Model
-  = None String
+  = None 
   | Failure
   | Loading
-  | Success Resultat
+  | Success String
 
 
 type alias Resultat = 
@@ -43,7 +43,7 @@ type alias Resultat =
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( None ""
+  ( None 
   , Cmd.none
   )
 
@@ -53,7 +53,7 @@ init _ =
 
 
 type Msg
-  = GotResult (Result Http.Error Resultat)
+  = GotResult (Result Http.Error String)
     | NewGame (Result Http.Error String)
     | Rock
     | Paper
@@ -92,7 +92,7 @@ getRps : Int -> Cmd Msg
 getRps  nbr = 
         Http.get 
         {url = apiUrl  ++ String.fromInt nbr,
-        expect = Http.expectJson GotResult myDecoder
+        expect = Http.expectString GotResult 
         } 
 
 
@@ -131,7 +131,7 @@ update msg model =
     NewGame result ->
       case result of 
         Ok text ->
-          (None text, Cmd.none)
+          (None , Cmd.none)
         Err _ ->
           (Failure,Cmd.none)       
     _ -> updateChoice msg model
@@ -171,11 +171,12 @@ view model =
 
         case model of 
           Success fullText ->
-            pre [] [ text ("opponent's choice : " ++fullText.cpu_move ++ "\n your choice : " ++ fullText.user_move ++ "\n Result" ++ fullText.result ++ "\n Global Score : " ++fullText.global_score) ]
+            pre [] [ text fullText ] 
+            
           Loading ->
-            pre [] [ text "status : loading" ] 
+            pre [] [ text "Loading data" ] 
           Failure ->
-            pre [] [ text "status : failure" ]  
-          None textM ->
-            pre [] [ text (" None : "++textM ) ]
+            pre [] [ text "Oups, the oponent did not reply " ]  
+          None ->
+            pre [] [ text "New Game, Go" ]
     ]      
