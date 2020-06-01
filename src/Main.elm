@@ -27,7 +27,7 @@ main =
 
 
 type Model
-  = None
+  = None String
   | Failure
   | Loading
   | Success Resultat
@@ -35,14 +35,15 @@ type Model
 
 type alias Resultat = 
     {cpu_move : String,
-     user_move : String,
+     global_score : String,
      result : String,
-     global_score : String   
+     user_move : String
     }
+
 
 init : () -> (Model, Cmd Msg)
 init _ =
-  ( None
+  ( None ""
   , Cmd.none
   )
 
@@ -53,6 +54,7 @@ init _ =
 
 type Msg
   = GotResult (Result Http.Error Resultat)
+    | NewGame (Result Http.Error String)
     | Rock
     | Paper
     | Scissors
@@ -79,9 +81,11 @@ updateChoice choice model =
     Spock ->   
       (Loading, getRps 4)
     Reset ->
-      (None, Cmd.none)  
+      (Loading, resetGame "init")  
     GotResult some->
-      (Loading, Cmd.none)  
+      (Loading, Cmd.none)
+    NewGame str ->
+      (Loading, Cmd.none)    
     
 
 getRps : Int -> Cmd Msg 
@@ -91,17 +95,27 @@ getRps  nbr =
         expect = Http.expectJson GotResult myDecoder
         } 
 
+
 apiUrl : String
 apiUrl = "https://localhost:5001/getRps/" 
+
+
+resetGame : String -> Cmd Msg
+resetGame reset =
+           Http.get 
+          {url = apiUrl  ++ reset,
+          expect = Http.expectString NewGame    
+        } 
+
 
 
 myDecoder : Decoder Resultat
 myDecoder =
      D.map4 Resultat
      (D.field "cpu_move" D.string )  
-     (D.field "user_move" D.string )  
-     (D.field "result" D.string )  
      (D.field "global_score " D.string )   
+     (D.field "result" D.string )  
+     (D.field "user_move" D.string )  
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -113,6 +127,13 @@ update msg model =
 
         Err _ ->
           (Failure, Cmd.none)
+
+    NewGame result ->
+      case result of 
+        Ok text ->
+          (None text, Cmd.none)
+        Err _ ->
+          (Failure,Cmd.none)       
     _ -> updateChoice msg model
 
 
@@ -155,6 +176,6 @@ view model =
             pre [] [ text "status : loading" ] 
           Failure ->
             pre [] [ text "status : failure" ]  
-          None ->
-            pre [] [ text "status : none" ]   
+          None textM ->
+            pre [] [ text (" None : "++textM ) ]
     ]      
