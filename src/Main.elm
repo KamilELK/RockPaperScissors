@@ -176,7 +176,21 @@ view model =
                               pre [] [ text "Oups, the oponent did not reply " ]  
                             None ->
                               pre [] [ text "New Game, Go" ]
-            ] 
+            ]
+            ,div []
+                [ 
+                  case model of 
+                            Success fullText -> 
+                              div [] [ h4 ([] ++ Stylesheet.h3Style) [
+                                              img [src "img/Win.png", height 70, onClick Rock] []
+                                            , img [src "img/Lose.png", height 70, onClick Rock] []]]
+                            Loading ->
+                              pre [] [] 
+                            Failure ->
+                              pre [] []  
+                            None ->
+                              pre [] [] 
+                ] 
             ,Table.table
                 { options = [ ]
                 , thead =  Table.simpleThead
@@ -203,6 +217,6 @@ view model =
                 ]
         
           ,div []
-                [ h5 ([] ++ Stylesheet.h3Style) [ button [onClick Reset][ text "Rejouer"] ] ]
+                [ h5 ([] ++ Stylesheet.h3Style) [ img [src "img/rejouer.png", height 100, onClick Reset] [] ] ]
 
         ]  

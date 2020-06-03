@@ -17,7 +17,7 @@ buttonStyle =
 divStyle : List (Attribute msg)
 divStyle =
     [ style "width" "322px"
-    , style "margin" "20% auto auto auto"
+    , style "margin" "10% auto auto auto"
     ]
 
 imgStyle =
