@@ -6,6 +6,9 @@ import Html exposing (..)
 import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as D exposing (Decoder, field, string)
+import Bootstrap.Table as Table
+import Stylesheet
+import Json.Decode.Pipeline exposing (optional, optionalAt, required, requiredAt)
 
 
 
@@ -41,6 +44,14 @@ type alias Resultat =
     }
 
 
+
+resultatDecoder =
+    D.succeed Resultat
+        |> Json.Decode.Pipeline.required "cpu_move" string
+        |> Json.Decode.Pipeline.required "global_score" string
+        |> Json.Decode.Pipeline.required "result" string
+        |> Json.Decode.Pipeline.required "user_move" string
+
 init : () -> (Model, Cmd Msg)
 init _ =
   ( None 
@@ -63,6 +74,9 @@ type Msg
     | Reset
      
  
+
+
+
 
 
 
@@ -150,33 +164,45 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-  div []
-    [   h1  [style "margin" "5vh 30vw"] [text "Rock Paper Scissors Lizard Spock"],
-        div []
-        [ button [style "margin" "5vh 45vw", onClick Reset][ text "Restart"]], 
+  div ([] ++ Stylesheet.divStyle)
+        [ h3 ([] ++ Stylesheet.h3Style) [ text "Jouer à Rock Paper Scissors, la version Big Bang Theory" ]
+            ,h5 ([] ++ Stylesheet.h3Style) [
+              case model of 
+                            Success fullText ->
+                              pre [] [ text fullText ]
+                            Loading ->
+                              pre [] [ text "Loading data" ] 
+                            Failure ->
+                              pre [] [ text "Oups, the oponent did not reply " ]  
+                            None ->
+                              pre [] [ text "New Game, Go" ]
+            ] 
+            ,Table.table
+                { options = [ ]
+                , thead =  Table.simpleThead
+                    [ Table.th [] [  ]
+                    , Table.th [] [  ]
+                    , Table.th [] [  ]
+                    , Table.th [] [  ]
+                    , Table.th [] [  ]
+                    ]
+                , tbody =
+                    Table.tbody []
+                        [ Table.tr []
+                            [ Table.td [] [ img [src "img/Pierre.png", width 60, height 60, onClick Rock] [] ]
+                            , Table.td [] [ img [src "img/feuille.png", width 60, height 60, onClick Paper] [] ]
+                            , Table.td [] [ img [src "img/ciseaux.png", width 60, height 60, onClick Scissors] [] ]
+                            , Table.td [] [ img [src "img/Spock.png", width 60, height 60, onClick Spock] [] ]
+                            , Table.td [] [ img [src "img/lezard.png", width 60, height 60, onClick Lizard] [] ]
+                            ]
+                        ]
+                }
+          ,div []
+                [ div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "Vous"]]
+                , div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "Le deuxième joueur"]]
+                ]
         
+          ,div []
+                [ h5 ([] ++ Stylesheet.h3Style) [ button [onClick Reset][ text "Rejouer"] ] ]
 
-        button [style "margin" "5vh 45vw", onClick Rock][ text "Rock"],
-        div []
-            [
-            button [style "margin" "5vh 28vw", onClick Paper][ text "Paper"],
-            button [style "margin" "5vh 1vw",onClick Scissors][ text "Scissors"]
-            ],
-        div []    
-            [
-            button [style "margin" "10vh 28vw",onClick Lizard][ text "Lizard"],
-            button [style "margin" "10vh 1vw",onClick Spock][ text "Spock"]
-            ],
-        
-
-        case model of 
-          Success fullText ->
-            pre [] [ text fullText ] 
-            
-          Loading ->
-            pre [] [ text "Loading data" ] 
-          Failure ->
-            pre [] [ text "Oups, the oponent did not reply " ]  
-          None ->
-            pre [] [ text "New Game, Go" ]
-    ]      
+        ]  
