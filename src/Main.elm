@@ -8,7 +8,7 @@ import Html.Attributes exposing (..)
 import Json.Decode as D exposing (Decoder, field, string)
 import Bootstrap.Table as Table
 import Stylesheet
-import Json.Decode.Pipeline exposing (optional, optionalAt, required, requiredAt)
+import String exposing (..)
 
 
 
@@ -45,12 +45,6 @@ type alias Resultat =
 
 
 
-resultatDecoder =
-    D.succeed Resultat
-        |> Json.Decode.Pipeline.required "cpu_move" string
-        |> Json.Decode.Pipeline.required "global_score" string
-        |> Json.Decode.Pipeline.required "result" string
-        |> Json.Decode.Pipeline.required "user_move" string
 
 init : () -> (Model, Cmd Msg)
 init _ =
@@ -133,6 +127,7 @@ myDecoder =
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
+
   case msg of
     GotResult result ->
       case result of
@@ -158,6 +153,9 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
 
+playerList = []
+
+cpuList = []
 
 
 -- VIEW
@@ -181,9 +179,18 @@ view model =
                 [ 
                   case model of 
                             Success fullText -> 
-                              div [] [ h4 ([] ++ Stylesheet.h3Style) [
-                                              img [src "img/Win.png", height 70, onClick Rock] []
-                                            , img [src "img/Lose.png", height 70, onClick Rock] []]]
+                              div [] [ 
+                                                  if String.contains "\"Win\"" fullText then
+                                                    h4 ([] ++ Stylesheet.h3Style) [img [src "img/Win.png", height 80, onClick Rock] []]
+                                                    
+                                                  else if String.contains "\"Loss\"" fullText then
+                                                    h4 ([] ++ Stylesheet.h3Style) [img [src "img/Lose.png", height 80, onClick Rock] []]
+                                                  else if String.contains "\"Draw\"" fullText then
+                                                  h4 ([] ++ Stylesheet.h3Style) [img [src "img/draw.png", height 80, onClick Rock] []]
+                                                  else
+                                                    h4 ([] ++ Stylesheet.h3Style) [text ""]
+                                              
+                                      ]
                             Loading ->
                               pre [] [] 
                             Failure ->
@@ -211,11 +218,6 @@ view model =
                             ]
                         ]
                 }
-          ,div []
-                [ div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "Vous"]]
-                , div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "Le deuxième joueur"]]
-                ]
-        
           ,div []
                 [ h5 ([] ++ Stylesheet.h3Style) [ img [src "img/rejouer.png", height 100, onClick Reset] [] ] ]
 
