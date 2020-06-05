@@ -150,7 +150,14 @@ update msg model =
           (Failure,Cmd.none)       
     _ -> updateChoice msg model
 
+--stringDecode : string -> string
+--stringDecode str =
+  --get 0 (String.split "," str)
 
+
+
+
+  
 -- SUBSCRIPTIONS
 
 
@@ -168,7 +175,7 @@ view model =
         [ h3 ([] ++ Stylesheet.h3Style) [ text "Jouer à Rock Paper Scissors, la version Big Bang Theory" ]
             ,h5 ([] ++ Stylesheet.h3Style) [
               case model of 
-                            Success fullText ->
+                            Success fullText ->      
                               pre [] [ text fullText ]
                             Loading ->
                               pre [] [ text "Loading data" ] 
@@ -182,8 +189,8 @@ view model =
                   case model of 
                             Success fullText -> 
                               div [] [ h4 ([] ++ Stylesheet.h3Style) [
-                                              img [src "img/Win.png", height 70, onClick Rock] []
-                                            , img [src "img/Lose.png", height 70, onClick Rock] []]]
+                                              img [src "img/Win.png", height 70] []
+                                            , img [src "img/Lose.png", height 70] []]]
                             Loading ->
                               pre [] [] 
                             Failure ->
@@ -213,7 +220,7 @@ view model =
                 }
           ,div []
                 [ div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "Vous"]]
-                , div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "Le deuxième joueur"]]
+                , div ([] ++ Stylesheet.reponseTableStyle) [ h4 ([] ++ Stylesheet.h3Style) [text "L'adversaire"]]
                 ]
         
           ,div []
