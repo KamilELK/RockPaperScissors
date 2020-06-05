@@ -33,7 +33,7 @@ type Model
   = None 
   | Failure
   | Loading
-  | Success String
+  | Success Resultat
 
 
 type alias Resultat = 
@@ -58,7 +58,7 @@ init _ =
 
 
 type Msg
-  = GotResult (Result Http.Error String)
+  = GotResult (Result Http.Error Resultat)
     | NewGame (Result Http.Error String)
     | Rock
     | Paper
@@ -100,7 +100,7 @@ getRps : Int -> Cmd Msg
 getRps  nbr = 
         Http.get 
         {url = apiUrl  ++ String.fromInt nbr,
-        expect = Http.expectString GotResult 
+        expect = Http.expectJson GotResult myDecoder
         } 
 
 
@@ -121,7 +121,7 @@ myDecoder : Decoder Resultat
 myDecoder =
      D.map4 Resultat
      (D.field "cpu_move" D.string )  
-     (D.field "global_score " D.string )   
+     (D.field "global_score" D.string )   
      (D.field "result" D.string )  
      (D.field "user_move" D.string )  
 
@@ -167,7 +167,7 @@ view model =
             ,h5 ([] ++ Stylesheet.h3Style) [
               case model of 
                             Success fullText ->
-                              pre [] [ text fullText ]
+                              pre [] [ text ("Vous : "++fullText.user_move) ]
                             Loading ->
                               pre [] [ text "Loading data" ] 
                             Failure ->
@@ -180,12 +180,12 @@ view model =
                   case model of 
                             Success fullText -> 
                               div [] [ 
-                                                  if String.contains "\"Win\"" fullText then
+                                                  if fullText.result =="Win" then
                                                     h4 ([] ++ Stylesheet.h3Style) [img [src "img/Win.png", height 80, onClick Rock] []]
                                                     
-                                                  else if String.contains "\"Loss\"" fullText then
+                                                  else if fullText.result =="Loss" then
                                                     h4 ([] ++ Stylesheet.h3Style) [img [src "img/Lose.png", height 80, onClick Rock] []]
-                                                  else if String.contains "\"Draw\"" fullText then
+                                                  else if fullText.result =="Draw" then
                                                   h4 ([] ++ Stylesheet.h3Style) [img [src "img/draw.png", height 80, onClick Rock] []]
                                                   else
                                                     h4 ([] ++ Stylesheet.h3Style) [text ""]
