@@ -1,5 +1,6 @@
 ﻿using Nancy.Json;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using RockPaperScissors.Services;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace RockPaperScissorsLizSpock.Services
             gameData = new List<Partie>();
         }
 
-        public string Play(string i)
+        public JObject Play(string i)
         {
             userMove = parseUserChoice(i);
 
@@ -40,8 +41,9 @@ namespace RockPaperScissorsLizSpock.Services
             JsonSerializer serializer = new JsonSerializer();
             var res = currentRound.ResultToJson(stats);
             var json = new JavaScriptSerializer().Serialize(res);
+            JObject jsonResult = JObject.Parse(json);
 
-            return json;
+            return jsonResult;
         }
 
         private Partie.moves cpuPlay()
