@@ -12,9 +12,7 @@ import String exposing (..)
 
 
 
--- MAINY
-
-
+-- la main contenant les différents composants de l'application front
 
 main =
   Browser.element
@@ -26,7 +24,7 @@ main =
 
 
 
--- MODEL
+-- le modèle qui est le response de la requete envoyée à l'api
 
 
 type Model
@@ -36,6 +34,7 @@ type Model
   | Success Resultat
 
 
+--L'objet qui fera le mapping de la réponse de l'api
 type alias Resultat = 
     {cpu_move : String,
      global_score : String,
@@ -45,7 +44,7 @@ type alias Resultat =
 
 
 
-
+-- L'état initial
 init : () -> (Model, Cmd Msg)
 init _ =
   ( None 
@@ -54,8 +53,8 @@ init _ =
 
 
 
--- UPDATE
 
+-- Les types de messages qui seront communiqués au update en cas de changement d'état
 
 type Msg
   = GotResult (Result Http.Error Resultat)
@@ -71,10 +70,10 @@ type Msg
 
 
 
+-- UPDATE
 
 
-
-
+-- une instance de la méthode update, qui joue le role d'un listner des évennements produits par l'utilisateurs
 updateChoice : Msg -> Model -> (Model, Cmd Msg)  
 updateChoice choice model = 
     case choice of 
@@ -96,6 +95,8 @@ updateChoice choice model =
       (Loading, Cmd.none)    
     
 
+-- getRps, une méthode qui permet de communiquer avec l'api afin d'obtenir les données nécessaires lors d'une partie
+
 getRps : Int -> Cmd Msg 
 getRps  nbr = 
         Http.get 
@@ -108,6 +109,8 @@ apiUrl : String
 apiUrl = "https://localhost:44394/getRps/" 
 
 
+
+-- une méthode qui communique aussi avec l'api, mais dans le but de rejouer la partie et remettre le compteur à zéro
 resetGame : String -> Cmd Msg
 resetGame reset =
            Http.get 
@@ -116,7 +119,7 @@ resetGame reset =
         } 
 
 
-
+-- ceci permet de décoder l'objet json qu'on reçois via la méthode getRps
 myDecoder : Decoder Resultat
 myDecoder =
      D.map4 Resultat
@@ -125,6 +128,8 @@ myDecoder =
      (D.field "result" D.string )  
      (D.field "user_move" D.string )  
 
+
+-- la méthode principale qui permet de gérer les évennements sur l'état de l'appli
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
 
@@ -153,12 +158,9 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
 
-playerList = []
-
-cpuList = []
 
 
--- VIEW
+-- VIEW, qui contient le représentation graphique du modèle
 
 view : Model -> Html Msg
 view model =
