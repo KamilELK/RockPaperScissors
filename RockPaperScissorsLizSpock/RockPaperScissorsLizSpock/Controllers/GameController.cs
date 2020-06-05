@@ -25,7 +25,7 @@ namespace RockPaperScissorsLizSpock.Controllers
 
         // GET: api/Game/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(string id)
+        public JObject Get(string id)
         {
             Game game = new Game();
             Statistiques stats = new Statistiques();
@@ -45,9 +45,9 @@ namespace RockPaperScissorsLizSpock.Controllers
                 case "init":
                     game = new Game();
                     stats.ClearStats();
-                    return "init";
+                    return JObject.Parse("init");
                 default:
-                    return "Une erreur s'est produite";
+                    return JObject.Parse("Une erreur s'est produite");
             }
         }
 

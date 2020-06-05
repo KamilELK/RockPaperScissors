@@ -105,7 +105,7 @@ getRps  nbr =
 
 
 apiUrl : String
-apiUrl = "https://localhost:5001/getRps/" 
+apiUrl = "https://localhost:44394/getRps/" 
 
 
 resetGame : String -> Cmd Msg
