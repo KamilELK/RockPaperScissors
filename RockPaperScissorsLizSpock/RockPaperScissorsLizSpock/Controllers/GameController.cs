@@ -45,7 +45,8 @@ namespace RockPaperScissorsLizSpock.Controllers
                 case "init":
                     game = new Game();
                     stats.ClearStats();
-                    return JObject.Parse("init");
+                    var jobject = new JObject();
+                    return jobject;
                 default:
                     return JObject.Parse("Une erreur s'est produite");
             }
