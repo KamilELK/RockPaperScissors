@@ -167,7 +167,7 @@ view model =
             ,h5 ([] ++ Stylesheet.h3Style) [
               case model of 
                             Success fullText ->
-                              pre [] [ text ("Vous : "++fullText.user_move) ]
+                              pre [] [ text ("Vous : "++fullText.user_move++", Adversaire : "++fullText.cpu_move++"\n Score global : "++fullText.global_score) ]
                             Loading ->
                               pre [] [ text "Loading data" ] 
                             Failure ->
